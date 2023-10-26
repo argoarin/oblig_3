@@ -1,23 +1,30 @@
-name: Run Tests
-
+name: run-tests
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+        - main
 
 jobs:
   test:
+    name: Run test
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    - name: Checkout and setup
+      uses: actions/checkout@v3
 
-    - name: Set up JDK
-      uses: actions/setup-java@v2
+    - name: Set up Java
+      uses: actions/setup-Java@v3
       with:
-        java-version: 11 
+        java-version: "19"
+        distribution: "temurin"
+        cache: "maven"
 
     - name: Build and run tests with Maven
-      run: |
-        mvn test 
+      run: mvn package 
+
+    - name: Run JUnit tests
+      run: mvn test
